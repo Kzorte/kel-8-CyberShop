@@ -1,95 +1,161 @@
-import React from "react";
-import facebookSvg from "@/images/Facebook.svg";
-import twitterSvg from "@/images/Twitter.svg";
-import googleSvg from "@/images/Google.svg";
+"use client";
+import React, { useState } from "react";
 import Input from "@/shared/Input/Input";
 import ButtonPrimary from "@/shared/Button/ButtonPrimary";
-import Image from "next/image";
 import Link from "next/link";
-
-const loginSocials = [
-  {
-    name: "Continue with Facebook",
-    href: "#",
-    icon: facebookSvg,
-  },
-  {
-    name: "Continue with Twitter",
-    href: "#",
-    icon: twitterSvg,
-  },
-  {
-    name: "Continue with Google",
-    href: "#",
-    icon: googleSvg,
-  },
-];
+import RootLayout from "../layout";
+import ButtonSecondary from "@/shared/Button/ButtonSecondary";
 
 const PageSignUp = () => {
-  return (
-    <div className={`nc-PageSignUp `} data-nc-id="PageSignUp">
-      <div className="container mb-24 lg:mb-32">
-        <h2 className="my-20 flex items-center text-3xl leading-[115%] md:text-5xl md:leading-[115%] font-semibold text-neutral-900 dark:text-neutral-100 justify-center">
-          Signup
-        </h2>
-        <div className="max-w-md mx-auto space-y-6 ">
-          <div className="grid gap-3">
-            {loginSocials.map((item, index) => (
-              <a
-                key={index}
-                href={item.href}
-                className=" flex w-full rounded-lg bg-primary-50 dark:bg-neutral-800 px-4 py-3 transform transition-transform sm:px-6 hover:translate-y-[-2px]"
-              >
-                <Image
-                  sizes="40px"
-                  className="flex-shrink-0"
-                  src={item.icon}
-                  alt={item.name}
-                />
-                <h3 className="flex-grow text-center text-sm font-medium text-neutral-700 dark:text-neutral-300 sm:text-sm">
-                  {item.name}
-                </h3>
-              </a>
-            ))}
-          </div>
-          {/* OR */}
-          <div className="relative text-center">
-            <span className="relative z-10 inline-block px-4 font-medium text-sm bg-white dark:text-neutral-400 dark:bg-neutral-900">
-              OR
-            </span>
-            <div className="absolute left-0 w-full top-1/2 transform -translate-y-1/2 border border-neutral-100 dark:border-neutral-800"></div>
-          </div>
-          {/* FORM */}
-          <form className="grid grid-cols-1 gap-6" action="#" method="post">
-            <label className="block">
-              <span className="text-neutral-800 dark:text-neutral-200">
-                Email address
-              </span>
-              <Input
-                type="email"
-                placeholder="example@example.com"
-                className="mt-1"
-              />
-            </label>
-            <label className="block">
-              <span className="flex justify-between items-center text-neutral-800 dark:text-neutral-200">
-                Password
-              </span>
-              <Input type="password" className="mt-1" />
-            </label>
-            <ButtonPrimary type="submit">Continue</ButtonPrimary>
-          </form>
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: '',
+    confirmPassword: ''
+  });
 
-          {/* ==== */}
-          <span className="block text-center text-neutral-700 dark:text-neutral-300">
-            Already have an account? {` `}
-            <Link className="text-green-600" href="/login">
-              Sign in
-            </Link>
-          </span>
+  const handleChange = (e: { target: { name: any; value: any; }; }) => {
+    const { name, value } = e.target;
+    setFormData(prevState => ({
+      ...prevState,
+      [name]: value
+    }));
+  };
+
+  const handleSubmit = async (event: { preventDefault: () => void; }) => {
+    event.preventDefault();
+    // Basic validation for password match
+    if (formData.password !== formData.confirmPassword) {
+      alert("Passwords do not match!");
+      return;
+    }
+
+    try {
+      const response = await fetch('/api/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          email: formData.email,
+          password: formData.password
+        })
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        console.log('Signup successful', data);
+        // Redirect to login or further user pages
+      } else {
+        throw new Error(data.message || 'Failed to sign up');
+      }
+    } catch (error) {
+      console.error('Signup error:', (error as Error).message);
+      alert((error as Error).message || 'An error occurred, please try again.');
+    }
+  };
+
+  return (
+    <RootLayout params={{}} hideHeader={true} hideFooter={true}>
+      <div className={`nc-PageSignUp`} data-nc-id="PageSignUp">
+        <div className="container mb-24 lg:mb-32">
+          <h2 className="my-20 flex items-center text-3xl leading-[115%] md:text-5xl md:leading-[115%] font-semibold text-neutral-900 dark:text-neutral-100 justify-center">
+            Signup
+          </h2>
+          <div className="max-w-md mx-auto space-y-6">
+            <form className="grid grid-cols-1 gap-6" onSubmit={handleSubmit}>
+              <label className="block">
+                <span className="text-neutral-800 dark:text-neutral-200">
+                  First name
+                </span>
+                <Input
+                  required
+                  type="text"
+                  name="firstName"
+                  placeholder="Enter Your First Name*"
+                  className="mt-1"
+                  value={formData.firstName}
+                  onChange={handleChange}
+                />
+              </label>
+              <label className="block">
+                <span className="text-neutral-800 dark:text-neutral-200">
+                  Last name
+                </span>
+                <Input
+                  required
+                  type="text"
+                  name="lastName"
+                  placeholder="Enter Your Last Name*"
+                  className="mt-1"
+                  value={formData.lastName}
+                  onChange={handleChange}
+                />
+              </label>
+              <label className="block">
+                <span className="text-neutral-800 dark:text-neutral-200">
+                  Email address
+                </span>
+                <Input
+                  required
+                  type="email"
+                  name="email"
+                  placeholder="example@example.com"
+                  className="mt-1"
+                  value={formData.email}
+                  onChange={handleChange}
+                />
+              </label>
+              <label className="block">
+                <span className="text-neutral-800 dark:text-neutral-200">
+                  Password
+                </span>
+                <Input
+                  required
+                  type="password"
+                  name="password"
+                  placeholder="Enter Your Password*"
+                  className="mt-1"
+                  value={formData.password}
+                  onChange={handleChange}
+                />
+              </label>
+              <label className="block">
+                <span className="text-neutral-800 dark:text-neutral-200">
+                  Re-enter password
+                </span>
+                <Input
+                  required
+                  type="password"
+                  name="confirmPassword"
+                  placeholder="Enter Your Password Again*"
+                  className="mt-1"
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                />
+              </label>
+              <ButtonPrimary type="submit">Continue</ButtonPrimary>
+            </form>
+
+            <span className="block text-center text-neutral-700 dark:text-neutral-300">
+               Already have an account? {` `}
+              <Link href="/login" legacyBehavior>
+                <a className="text-green-600">Sign in</a>
+              </Link>
+                <br /><br />
+              <ButtonSecondary>
+              <Link href="/" legacyBehavior>
+                <a className="text-blue-600">Back Home</a>
+              </Link>
+              </ButtonSecondary>
+            </span>
+          </div>
         </div>
       </div>
-    </div>
+    </RootLayout>
   );
 };
 

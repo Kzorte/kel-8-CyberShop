@@ -16,17 +16,22 @@ const poppins = Poppins({
 export default function RootLayout({
   children,
   params,
+  hideHeader,
+  hideFooter, // Tambahkan properti hideHeader
 }: {
   children: React.ReactNode;
   params: any;
+  hideHeader?: boolean;
+  hideFooter?: boolean;
 }) {
   return (
     <html lang="en" dir="" className={poppins.className}>
       <body className="bg-white text-base dark:bg-neutral-900 text-neutral-900 dark:text-neutral-200">
-        <SiteHeader />
+        {/* Tampilkan header hanya jika hideHeader tidak ditetapkan */}
+        {!hideHeader && <SiteHeader />}
         {children}
         <CommonClient />
-        <Footer />
+        {!hideFooter && <Footer />}
       </body>
     </html>
   );

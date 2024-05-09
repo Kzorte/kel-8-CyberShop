@@ -183,10 +183,14 @@ const NavMobile: React.FC<NavMobileProps> = ({
           <ButtonClose onClick={onClickClose} />
         </span>
 
-        <div className="mt-5">{renderSearchForm()}</div>
+        {/* <div className="mt-5">{renderSearchForm()}</div> */}
       </div>
       <ul className="flex flex-col py-6 px-2 space-y-1">
         {data.map(_renderItem)}
+        <div className="py-10">
+          <Link className="p-4 transition duration-300 hover:bg-gray-200 hover:text-gray-700" href="/login">Login</Link>
+          <Link className="p-4 transition duration-300 hover:bg-gray-200 hover:text-gray-700" href="/signup">Signup</Link>
+        </div>
       </ul>
     </div>
   );

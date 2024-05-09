@@ -40,19 +40,25 @@ const ProductDetailPage = () => {
     useState(false);
 
   //
+  const isLoggedIn = false; // Assuming useAuth hook provides isLoggedIn state
+
   const notifyAddTocart = () => {
-    toast.custom(
-      (t) => (
-        <NotifyAddTocart
-          productImage={image}
-          qualitySelected={qualitySelected}
-          show={t.visible}
-          sizeSelected={sizeSelected}
-          variantActive={variantActive}
-        />
-      ),
-      { position: "top-right", id: "nc-product-notify", duration: 3000 }
-    );
+    if (isLoggedIn) {
+      toast.custom(
+        (t) => (
+          <NotifyAddTocart
+            productImage={image}
+            qualitySelected={qualitySelected}
+            show={t.visible}
+            sizeSelected={sizeSelected}
+            variantActive={variantActive}
+          />
+        ),
+        { position: "top-right", id: "nc-product-notify", duration: 3000 }
+      );
+    } else {
+       // Replace navigateToLoginPage with your authentication redirect function
+    }
   };
 
   const renderVariants = () => {

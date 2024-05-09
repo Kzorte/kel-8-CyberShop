@@ -18,20 +18,20 @@ export const HERO2_DEMO_DATA: Hero2DataType[] = [
     heading: "Temukan keajaiban dunia teknologi yang tak terbatas, jelajahi sepuasmu.",
     subHeading: "",
     btnText: "Shop now",
-    btnLink: "/collection-2",
+    btnLink: "/collection",
   },
   {
     image: imageRightPng3,
     heading: "Temukan keajaiban dunia teknologi yang tak terbatas, jelajahi sepuasmu.",
     subHeading: "",
     btnText: "Shop now",
-    btnLink: "/collection-2",
+    btnLink: "/collection",
   },
   {
     image: imageRightPng,
     heading: "Temukan keajaiban dunia teknologi yang tak terbatas, jelajahi sepuasmu.",
     subHeading: "",
     btnText: "Shop now",
-    btnLink: "/collection-2",
+    btnLink: "/collection",
   },
 ];

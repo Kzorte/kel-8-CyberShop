@@ -1,5 +1,3 @@
-"use client";
-
 import { Popover, Transition } from "@/app/headlessui";
 import Prices from "@/components/Prices";
 import { Product, PRODUCTS } from "@/data/data";
@@ -10,6 +8,9 @@ import Image from "next/image";
 import Link from "next/link";
 
 export default function CartDropdown() {
+  // Mock isLoggedIn state
+  const isLoggedIn = false;
+
   const renderProduct = (item: Product, index: number, close: () => void) => {
     const { name, price, image } = item;
     return (
@@ -72,9 +73,9 @@ export default function CartDropdown() {
                 ${open ? "" : "text-opacity-90"}
                  group w-10 h-10 sm:w-12 sm:h-12 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full inline-flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 relative`}
           >
-            <div className="w-3.5 h-3.5 flex items-center justify-center bg-primary-500 absolute top-1.5 right-1.5 rounded-full text-[10px] leading-none text-white font-medium">
-              <span className="mt-[1px]">1</span>
-            </div>
+            {/* <div className="w-3.5 h-3.5 flex items-center justify-center bg-primary-500 absolute top-1.5 right-1.5 rounded-full text-[10px] leading-none text-white font-medium">
+              <span className="mt-[1px]">1</span> // notif pop up 1
+            </div> */}
             <svg
               className="w-6 h-6"
               viewBox="0 0 24 24"
@@ -127,45 +128,57 @@ export default function CartDropdown() {
             leaveTo="opacity-0 translate-y-1"
           >
             <Popover.Panel className="hidden md:block absolute z-10 w-screen max-w-xs sm:max-w-md px-4 mt-3.5 -right-28 sm:right-0 sm:px-0">
-              <div className="overflow-hidden rounded-2xl shadow-lg ring-1 ring-black/5 dark:ring-white/10">
-                <div className="relative bg-white dark:bg-neutral-800">
-                  <div className="max-h-[60vh] p-5 overflow-y-auto hiddenScrollbar">
-                    <h3 className="text-xl font-semibold">Shopping cart</h3>
-                    <div className="divide-y divide-slate-100 dark:divide-slate-700">
-                      {[PRODUCTS[4]].map(
-                        (item, index) => renderProduct(item, index, close)
-                      )}
+              {isLoggedIn ? (
+                <div className="overflow-hidden rounded-2xl shadow-lg ring-1 ring-black/5 dark:ring-white/10">
+                  <div className="relative bg-white dark:bg-neutral-800">
+                    <div className="max-h-[60vh] p-5 overflow-y-auto hiddenScrollbar">
+                      <h3 className="text-xl font-semibold">Shopping cart</h3>
+                      <div className="divide-y divide-slate-100 dark:divide-slate-700">
+                        {[PRODUCTS[4]].map(
+                          (item, index) => renderProduct(item, index, close)
+                        )}
+                      </div>
                     </div>
-                  </div>
-                  <div className="bg-neutral-50 dark:bg-slate-900 p-5">
-                    <p className="flex justify-between font-semibold text-slate-900 dark:text-slate-100">
-                      <span>
-                        <span>Subtotal</span>
-                        <span className="block text-sm text-slate-500 dark:text-slate-400 font-normal">
-                          Shipping and taxes calculated at checkout.
+                    <div className="bg-neutral-50 dark:bg-slate-900 p-5">
+                      <p className="flex justify-between font-semibold text-slate-900 dark:text-slate-100">
+                        <span>
+                          <span>Subtotal</span>
+                          <span className="block text-sm text-slate-500 dark:text-slate-400 font-normal">
+                            Shipping and taxes calculated at checkout.
+                          </span>
                         </span>
-                      </span>
-                      <span className="">$376.00</span>
-                    </p>
-                    <div className="flex space-x-2 mt-5">
-                      <ButtonSecondary
-                        href="/cart"
-                        className="flex-1 border border-slate-200 dark:border-slate-700"
-                        onClick={close}
-                      >
-                        View cart
-                      </ButtonSecondary>
-                      <ButtonPrimary
-                        href="/checkout"
-                        onClick={close}
-                        className="flex-1"
-                      >
-                        Check out
-                      </ButtonPrimary>
+                        <span className="">$376.00</span>
+                      </p>
+                      <div className="flex space-x-2 mt-5">
+                        <ButtonSecondary
+                          href="/cart"
+                          className="flex-1 border border-slate-200 dark:border-slate-700"
+                          onClick={close}
+                        >
+                          View cart
+                        </ButtonSecondary>
+                        <ButtonPrimary
+                          href="/checkout"
+                          onClick={close}
+                          className="flex-1"
+                        >
+                          Check out
+                        </ButtonPrimary>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
+              ) : (
+                // Render login message or login button if not logged in
+                <div className="overflow-hidden rounded-2xl shadow-lg ring-1 ring-black/5 dark:ring-white/10 bg-white p-5">
+                  <p className="text-xl font-semibold">
+                    You need to login to view your cart.
+                  </p>
+                  <Link href="/login">
+                    <ButtonPrimary className="mt-3">Login</ButtonPrimary>
+                  </Link>
+                </div>
+              )}
             </Popover.Panel>
           </Transition>
         </>

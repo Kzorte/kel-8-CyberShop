@@ -4,7 +4,6 @@ import LoginPage from './Components/Login/LoginPage';
 import Signup from './Components/Signup/Signup';
 import Admin from './Pages/Admin/Admin';
 import Navbar from './Components/Navbar/Navbar';
-import Dashboard from './Pages/Dashboard/Dashboard';
 
 const ProtectedRoute = ({ children, isLoggedIn }) => {
   return isLoggedIn ? children : <Navigate to="/login" replace />;
