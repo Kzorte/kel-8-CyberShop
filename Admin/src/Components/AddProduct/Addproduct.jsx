@@ -1,92 +1,134 @@
 import React, { useState } from 'react';
 import './AddProduct.css';
-import upload_area from '../../assets/upload_area.svg'
+import upload_area from '../../assets/upload_area.svg';
+import { NumericFormat } from 'react-number-format';
 
-const Addproduct = () => {
+const AddProduct = () => {
+    const [image, setImage] = useState(null);
+    const [productDetails, setProductDetails] = useState({
+        name: "",
+        category: "NoteBook",
+        price: "",
+        stock: 0,
+        description: ""
+    });
 
-    const [image,setImage] = useState(false);
-    const [productDetails,setProductDetails] = useState({
-        name:"",
-        image:"",
-        category:"NoteBook",
-        new_price:"",
-        old_price:"",
-    })
-
-    const imageHandler = (e) =>{
+    const handleImageChange = (e) => {
         setImage(e.target.files[0]);
-    } 
-    const changeHandler = (e) =>{
-        setProductDetails({...productDetails,[e.target.name]:e.target.value})
-    }
+    };
 
-    const Add_Product = async ()=>{
-        console.log(productDetails);
-        let responseData;
-        let product = productDetails;
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setProductDetails(prevState => ({
+            ...prevState,
+            [name]: value
+        }));
+    };
 
-        let formData = new FormData();
-        formData.append('product',image);
-
-        await fetch('http://127.0.0.1:3000/upload',{
-            method:'POST',
-            headers:{
-                Accept:'application/json',
-            },
-            body:formData, 
-        }).then((resp) => resp.json()).then((data)=>{responseData=data});
-
-        if(responseData.success) {
-            product.image = responseData.image_url;
-            console.log(product);
-            await fetch('http://127.0.0.1:3000/addproduct', {
-                method: 'POST',
-                headers: {
-                    Accept: 'application/json', 
-                    'Content-Type': 'application/json', 
-                },
-                body: JSON.stringify(product),
-            }).then((resp)=>resp.json()).then((data)=>{
-                data.success?alert("Product Added"):alert("Failed")
-            })
+    const handleSubmit = async () => {
+        // Membersihkan format harga dan stok
+        const cleanedPrice = productDetails.price.replace(/Rp|,|\./g, ''); // Menghilangkan Rp dan tanda pemisah ribuan
+        const cleanedStock = productDetails.stock; // Pastikan ini sudah numerik
+    
+        if (!productDetails.name || !image || !productDetails.category || isNaN(Number(cleanedPrice)) || isNaN(Number(cleanedStock))) {
+          alert('Please fill all fields correctly.');
+          return;
         }
-
+    
+        const formData = new FormData();
+        formData.append('image', image);
+    
+        try {
+          const uploadResp = await fetch('http://localhost:3000/upload', {
+            method: 'POST',
+            body: formData,
+          });
+    
+          if (!uploadResp.ok) {
+            throw new Error('Failed to upload image');
+          }
+    
+          const uploadData = await uploadResp.json();
+    
+          const productData = {
+            name: productDetails.name,
+            category: productDetails.category,
+            image: uploadData.image_url,
+            price: Number(cleanedPrice),
+            stock: Number(cleanedStock),
+            description: productDetails.description
+          };
+    
+          const response = await fetch('http://localhost:3000/addproduct', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(productData),
+          });
+    
+          if (!response.ok) {
+            throw new Error(`Failed to add product: ${response.statusText}`);
+          }
+    
+          alert('Product added successfully!');
+          setProductDetails({ name: '', category: 'NoteBook', price: '', stock: 0, description: '' });
+          setImage(null);
+        } catch (error) {
+          alert(error.message);
         }
-
-  return (
-    <div className='add-product'>
-      <div className="addproduct-itemfield">
-        <p>Product Title</p>
-        <input valaue={productDetails.name} onChange={changeHandler} type="text" name='name' placeholder='Type here'/>
-        </div>
-        <div className="addproduct-price">
+    };
+    return (
+        <div className='add-product'>
             <div className="addproduct-itemfield">
-                <p>Price</p>
-                <input value={productDetails.old_price} onChange={changeHandler} type="text" name="old_price" placeholder='Type Here'/>
+                <p>Product Title</p>
+                <input value={productDetails.name} onChange={handleChange} type="text" name='name' placeholder='Type here'/>
             </div>
-            {/* <div className="addproduct-itemfield">
-                <p>Offer Price</p>
-                <input value={productDetails.new_price} onChange={changeHandler} type="text" name="new_price" placeholder='Type Here'/>
-            </div> */}
+            <div className="addproduct-price">
+                <div className="addproduct-itemfield">
+                    <p>Price</p>
+                    <NumericFormat 
+                        value={productDetails.price}
+                        thousandSeparator={true}
+                        prefix={'Rp'}
+                        onValueChange={(values) => {
+                            const { formattedValue } = values;
+                            setProductDetails(prevState => ({
+                                ...prevState,
+                                price: formattedValue
+                            }));
+                        }}
+                        className="input"
+                        placeholder='Type Here'
+                    />
+                </div>
+                <div className="addproduct-itemfield">
+                    <p>Stock</p>
+                    <input value={productDetails.stock} onChange={handleChange} type="number" name="stock" placeholder='Type Here'/>
+                </div>
+            </div>
+            <div className="addproduct-itemfield">
+                <p>Product Category</p>
+                <select value={productDetails.category} onChange={handleChange} name="category" className='add-product-selector'>
+                    <option value="SmartPhone">SmartPhone</option>
+                    <option value="NoteBook">NoteBook</option>
+                    <option value="SmartWacth">SmartWacth</option>
+                    <option value="Komputer">Komputer</option>
+                    <option value="TV">TV</option>
+                    <option value="Aksesoris">Aksesoris</option>
+                </select>
+            </div>
+            <div className="addproduct-itemfield">
+                <p>Product Description</p>
+                <textarea value={productDetails.description} onChange={handleChange} name="description" placeholder='Type here'></textarea>
+            </div>
+            <div className="addproduct-itemfield">
+                <label htmlFor="file-input">
+                    <img src={image ? URL.createObjectURL(image) : upload_area} className='addproduct-thumnail-img' alt="Upload"/>
+                </label>
+                <input onChange={handleImageChange} type="file" name="image" id='file-input' hidden/>
+            </div>
+            <button onClick={handleSubmit} className='addproduct-btn'>ADD</button>
         </div>
-        <div className="addproduct-itemfield">
-    <p>Product Category</p>
-    <select value={productDetails.category} onChange={changeHandler} name="category" className='add-product-selector'>
-        <option value="SmartPhone">SmartPhone</option>
-        <option value="NoteBook">NoteBook</option>
-        <option value="SmartWacth">SmartWacth</option>
-    </select>
-</div>
-        <div className="addproduct-itemfield">
-            <label htmlFor="file-input">
-                <img src={image?URL.createObjectURL(image):upload_area} className='addproduct-thumnail-img'/>
-            </label>
-            <input onChange={imageHandler} type="file" name="image" id='file-input' hidden/>
-        </div>
-        <button onClick={()=>{Add_Product()}} className='addproduct-btn'>ADD</button>
-    </div>
-  )
+    );
 }
 
-export default Addproduct
- 
+export default AddProduct;

@@ -204,43 +204,33 @@ const PaymentMethod: FC<Props> = ({
             </p>
             <ul className="mt-3.5 text-sm text-slate-500 dark:text-slate-400 space-y-2">
               <li>
-                <h3 className="text-base text-slate-800 dark:text-slate-200 font-semibold mb-1">
-                  Kelompok 8
-                </h3>
               </li>
               <li>
                 {" "}
-                Bank name:{" "}
+                Bank Name:{" "}
                 <span className="text-slate-900 dark:text-slate-200 font-medium">
-                  Example Bank Name
+                  Bank BCA
                 </span>
               </li>
               <li>
                 {" "}
-                Account number:{" "}
+                Account Number:{" "}
                 <span className="text-slate-900 dark:text-slate-200 font-medium">
-                  555 888 777
+                628563477
                 </span>
               </li>
               <li>
                 {" "}
-                Sort code:{" "}
+                Sort Code:{" "}
                 <span className="text-slate-900 dark:text-slate-200 font-medium">
-                  999
+                  8199
                 </span>
               </li>
               <li>
                 {" "}
-                IBAN:{" "}
+                Account Name:{" "}
                 <span className="text-slate-900 dark:text-slate-200 font-medium">
-                  IBAN
-                </span>
-              </li>
-              <li>
-                {" "}
-                BIC:{" "}
-                <span className="text-slate-900 dark:text-slate-200 font-medium">
-                  BIC/Swift
+                PT.Electron Indonesia
                 </span>
               </li>
             </ul>
@@ -308,7 +298,7 @@ const PaymentMethod: FC<Props> = ({
                 />
               </svg>
             </div>
-            <p className="font-medium">Google / Apple Wallet</p>
+            <p className="font-medium">DANA Wallet</p>
           </label>
           <div className={`mt-6 mb-4 space-y-6 ${active ? "block" : "hidden"}`}>
             <div className="text-sm prose dark:prose-invert">
@@ -393,7 +383,7 @@ const PaymentMethod: FC<Props> = ({
               </svg>
             </h3>
             <div className="font-semibold mt-1 text-sm">
-              <span className="">Google / Apple Wallet</span>
+              <span className="">DANA Wallet</span>
               <span className="ml-3">xxx-xxx-xx55</span>
             </div>
           </div>
@@ -420,12 +410,6 @@ const PaymentMethod: FC<Props> = ({
           <div>{renderWallet()}</div>
 
           <div className="flex pt-6">
-            <ButtonPrimary
-              className="w-full max-w-[240px]"
-              onClick={onCloseActive}
-            >
-              Confirm order
-            </ButtonPrimary>
             <ButtonSecondary className="ml-3" onClick={onCloseActive}>
               Cancel
             </ButtonSecondary>

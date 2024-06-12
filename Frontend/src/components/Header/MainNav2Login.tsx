@@ -1,19 +1,18 @@
 "use client";
 
-import React, { createRef, FC, useState } from "react";
+import React, { useRef, FC, useState } from "react";
 import Logo from "@/shared/Logo/Logo";
 import MenuBar from "@/shared/MenuBar/MenuBar";
-import AvatarDropdown from "./AvatarDropdown";
 import Navigation from "@/shared/Navigation/Navigation";
 import CartDropdown from "./CartDropdown";
 import { XMarkIcon } from "@heroicons/react/24/outline";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/navigation"; 
 import Link from "next/link";
 
 export interface MainNav2LoggedProps {}
 
 const MainNav2Logged: FC<MainNav2LoggedProps> = () => {
-  const inputRef = createRef<HTMLInputElement>();
+  const inputRef = useRef<HTMLInputElement>(null);
   const [showSearchForm, setShowSearchForm] = useState(false);
   const router = useRouter();
 
@@ -88,9 +87,15 @@ const MainNav2Logged: FC<MainNav2LoggedProps> = () => {
         </div>
 
         <div className="hidden sm:flex flex-1 items-center justify-end text-slate-700 dark:text-slate-100">
-          <CartDropdown /> |
-          <Link className="p-3" href="/login">Login</Link>
-          <Link className="p-2" href="/signup">Sign Up</Link>
+         
+        
+          
+         
+            <>
+              <Link className="p-3" href="/login">Login</Link>
+              <Link className="p-2" href="/signup">Sign Up</Link>
+            </>
+          
         </div>
       </div>
     );

@@ -1,10 +1,10 @@
 "use client";
 
+import { useRouter } from 'next/navigation'; // Import useRouter dari next/router
 import Label from "@/components/Label/Label";
 import NcInputNumber from "@/components/NcInputNumber";
 import Prices from "@/components/Prices";
-import { Product, PRODUCTS } from "@/data/data";
-import { useState } from "react";
+import { Key, useState } from "react";
 import ButtonPrimary from "@/shared/Button/ButtonPrimary";
 import Input from "@/shared/Input/Input";
 import ContactInfo from "./ContactInfo";
@@ -12,11 +12,17 @@ import PaymentMethod from "./PaymentMethod";
 import ShippingAddress from "./ShippingAddress";
 import Image from "next/image";
 import Link from "next/link";
+import { useAuth } from "@/context/AuthContext"; // Import useAuth hook
+import { confirmOrder } from '@/utils/api';
 
 const CheckoutPage = () => {
   const [tabActive, setTabActive] = useState<
     "ContactInfo" | "ShippingAddress" | "PaymentMethod"
   >("ShippingAddress");
+
+  const { cartItems } = useAuth(); // Get cartItems from AuthContext
+  const router = useRouter(); // Inisialisasi useRouter
+  const [selectedExpedition, setSelectedExpedition] = useState("");
 
   const handleScrollToEl = (id: string) => {
     const element = document.getElementById(id);
@@ -25,7 +31,30 @@ const CheckoutPage = () => {
     }, 80);
   };
 
-  const renderProduct = (item: Product, index: number) => {
+  const handleConfirmOrder = async () => {
+    // Logika untuk memproses pesanan
+    // Setelah pesanan diproses, arahkan pengguna ke halaman Payment Confirmation
+const orderData = {
+    userId: '12345', // Ganti dengan ID user sebenarnya
+    items: cartItems.map(item => ({
+      id: item.id.toString(), // Konversi id ke string
+      quantity: Number(item.quantity), // Pastikan quantity adalah number
+    })),
+    total: 405.90, // Ganti dengan total order sebenarnya
+    expedition: selectedExpedition,
+  };
+
+  try {
+    const result = await confirmOrder(orderData);
+    console.log('Order saved:', result);
+    // Arahkan pengguna ke halaman Payment Confirmation
+    router.push('/payment-confirmation');
+  } catch (err) {
+    console.error('Error:', err);
+  }
+};
+
+  const renderProduct = (item: { id?: any; image?: any; price?: any; name?: any; }, index: Key | null | undefined) => {
     const { image, price, name } = item;
 
     return (
@@ -38,137 +67,88 @@ const CheckoutPage = () => {
             className="h-full w-full object-contain object-center"
             sizes="150px"
           />
-          <Link href="/product-detail" className="absolute inset-0"></Link>
+          <Link href={`/product-detail/${item.id}`} legacyBehavior>
+            <a className="absolute inset-0"></a>
+          </Link>
         </div>
 
         <div className="ml-3 sm:ml-6 flex flex-1 flex-col">
-          <div>
-            <div className="flex justify-between ">
-              <div className="flex-[1.5] ">
-                <h3 className="text-base font-semibold">
-                  <Link href="/product-detail">{name}</Link>
-                </h3>
-                <div className="mt-1.5 sm:mt-2.5 flex text-sm text-slate-600 dark:text-slate-300">
-                  <div className="flex items-center space-x-1.5">
-                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none">
-                      <path
-                        d="M7.01 18.0001L3 13.9901C1.66 12.6501 1.66 11.32 3 9.98004L9.68 3.30005L17.03 10.6501C17.4 11.0201 17.4 11.6201 17.03 11.9901L11.01 18.0101C9.69 19.3301 8.35 19.3301 7.01 18.0001Z"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                        strokeMiterlimit="10"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M8.35 1.94995L9.69 3.28992"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                        strokeMiterlimit="10"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M2.07 11.92L17.19 11.26"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                        strokeMiterlimit="10"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M3 22H16"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                        strokeMiterlimit="10"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M18.85 15C18.85 15 17 17.01 17 18.24C17 19.26 17.83 20.09 18.85 20.09C19.87 20.09 20.7 19.26 20.7 18.24C20.7 17.01 18.85 15 18.85 15Z"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-
-                    <span>{`Blue`}</span>
-                  </div>
-                  <span className="mx-4 border-l border-slate-200 dark:border-slate-700 "></span>
-                  <div className="flex items-center space-x-1.5">
-                    {/* <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none">
-                      <path
-                        d="M21 9V3H15"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M3 15V21H9"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M21 3L13.5 10.5"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M10.5 13.5L3 21"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-
-                    <span>{`2XL`}</span> */}
-                  </div>
+          <div className="flex justify-between">
+            <div className="flex-[1.5]">
+              <h3 className="text-base font-semibold">
+                <Link href={`/product-detail/${item.id}`} legacyBehavior>
+                  <a>{name}</a>
+                </Link>
+              </h3>
+              <div className="mt-1.5 sm:mt-2.5 flex text-sm text-slate-600 dark:text-slate-300">
+                <div className="flex items-center space-x-1.5">
+                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none">
+                    <path
+                      d="M7.01 18.0001L3 13.9901C1.66 12.6501 1.66 11.32 3 9.98004L9.68 3.30005L17.03 10.6501C17.4 11.0201 17.4 11.6201 17.03 11.9901L11.01 18.0101C9.69 19.3301 8.35 19.3301 7.01 18.0001Z"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      strokeMiterlimit="10"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    <path
+                      d="M8.35 1.94995L9.69 3.28992"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      strokeMiterlimit="10"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    <path
+                      d="M2.07 11.92L17.19 11.26"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    <path
+                      d="M3 22H16"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    <path
+                      d="M18.85 15C18.85 15 17 17.01 17 18.24C17 19.26 17.83 20.09 18.85 20.09C19.87 20.09 20.7 19.26 20.7 18.24C20.7 17.01 18.85 15 18.85 15Z"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                  <span>{`Blue`}</span>
                 </div>
-
-                <div className="mt-3 flex justify-between w-full sm:hidden relative">
-                  <select
-                    name="qty"
-                    id="qty"
-                    className="form-select text-sm rounded-md py-1 border-slate-200 dark:border-slate-700 relative z-10 dark:bg-slate-800 "
-                  >
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                    <option value="6">6</option>
-                    <option value="7">7</option>
-                  </select>
-                  <Prices
-                    contentClass="py-1 px-2 md:py-1.5 md:px-2.5 text-sm font-medium h-full"
-                    price={price}
-                  />
-                </div>
+                <span className="mx-4 border-l border-slate-200 dark:border-slate-700"></span>
+                <div className="flex items-center space-x-1.5"></div>
               </div>
-
-              <div className="hidden flex-1 sm:flex justify-end">
-                <Prices price={price} className="mt-0.5" />
+              <div className="mt-3 flex justify-between w-full sm:hidden relative">
+                <select
+                  name="qty"
+                  id="qty"
+                  className="form-select text-sm rounded-md py-1 border-slate-200 dark:border-slate-700 relative z-10 dark:bg-slate-800"
+                >
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                  <option value="6">6</option>
+                  <option value="7">7</option>
+                </select>
+                <Prices
+                  contentClass="py-1 px-2 md:py-1.5 md:px-2.5 text-sm font-medium h-full"
+                  price={price}
+                />
               </div>
             </div>
-          </div>
-
-          <div className="flex mt-auto pt-4 items-end justify-between text-sm">
-            <div className="hidden sm:block text-center relative">
-              <NcInputNumber className="relative z-10" />
+            <div className="hidden flex-1 sm:flex justify-end">
+              <Prices price={price} className="mt-0.5" />
             </div>
-
-            <a
-              href="##"
-              className="relative z-10 flex items-center mt-3 font-medium text-primary-6000 hover:text-primary-500 text-sm "
-            >
-              <span>Remove</span>
-            </a>
           </div>
         </div>
       </div>
@@ -222,9 +202,9 @@ const CheckoutPage = () => {
 
   return (
     <div className="nc-CheckoutPage">
-      <main className="container py-16 lg:pb-28 lg:pt-20 ">
+      <main className="container py-16 lg:pb-28 lg:pt-20">
         <div className="mb-16">
-          <h2 className="block text-2xl sm:text-3xl lg:text-4xl font-semibold ">
+          <h2 className="block text-2xl sm:text-3xl lg:text-4xl font-semibold">
             Checkout
           </h2>
           <div className="block mt-3 sm:mt-5 text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-400">
@@ -242,16 +222,32 @@ const CheckoutPage = () => {
 
         <div className="flex flex-col lg:flex-row">
           <div className="flex-1">{renderLeft()}</div>
-
-          <div className="flex-shrink-0 border-t lg:border-t-0 lg:border-l border-slate-200 dark:border-slate-700 my-10 lg:my-0 lg:mx-10 xl:lg:mx-14 2xl:mx-16 "></div>
-
-          <div className="w-full lg:w-[36%] ">
+          <div className="flex-shrink-0 border-t lg:border-t-0 lg:border-l border-slate-200 dark:border-slate-700 my-10 lg:my-0 lg:mx-10 xl:lg:mx-14 2xl:mx-16"></div>
+          <div className="w-full lg:w-[36%]">
             <h3 className="text-lg font-semibold">Order summary</h3>
-            <div className="mt-8 divide-y divide-slate-200/70 dark:divide-slate-700 ">
-              {[PRODUCTS[4]].map(renderProduct)}
+            <div className="mt-8 divide-y divide-slate-200/70 dark:divide-slate-700">
+              {cartItems.map(renderProduct)}
             </div>
 
-            <div className="mt-10 pt-6 text-sm text-slate-500 dark:text-slate-400 border-t border-slate-200/70 dark:border-slate-700 ">
+            <div className="mt-10">
+              <h4 className="text-lg font-semibold">Choose Expedition</h4>
+              <div className="mt-4">
+                <select
+                  value={selectedExpedition}
+                  onChange={(e) => setSelectedExpedition(e.target.value)}
+                  className="form-select w-full text-sm rounded-md py-2 border-slate-200 dark:border-slate-700 dark:bg-slate-800"
+                >
+                  <option value="">Select Expedition</option>
+                  <option value="JNE">JNE</option>
+                  <option value="J&T">J&T</option>
+                  <option value="Lion Parcel">Lion Parcel</option>
+                  <option value="Si Cepat">Si Cepat</option>
+                  <option value="Cyber Express">Cyber Express</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="mt-10 pt-6 text-sm text-slate-500 dark:text-slate-400 border-t border-slate-200/70 dark:border-slate-700">
               <div>
                 <Label className="text-sm">Discount code</Label>
                 <div className="flex mt-1.5">
@@ -285,7 +281,9 @@ const CheckoutPage = () => {
                 <span>$405.90</span>
               </div>
             </div>
-            <ButtonPrimary className="mt-8 w-full">Confirm order</ButtonPrimary>
+            <ButtonPrimary className="mt-8 w-full" onClick={handleConfirmOrder}>
+              Confirm order
+            </ButtonPrimary>
             <div className="mt-5 text-sm text-slate-500 dark:text-slate-400 flex items-center justify-center">
               <p className="block relative pl-5">
                 <svg

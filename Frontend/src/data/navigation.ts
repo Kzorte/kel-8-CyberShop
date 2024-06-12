@@ -195,7 +195,7 @@ export const NAVIGATION_DEMO_2: NavItemType[] = [
   },
   {
     id: ncNanoId(),
-    href: "/not-found",
+    href: "/cybershopcare",
     name: "CyberShop Care",
   },
   {
@@ -233,9 +233,7 @@ export const NAVIGATION_DEMO_2: NavItemType[] = [
   // },
   {
     id: ncNanoId(),
-    href: "/",
+    href: "/collection",
     name: "Kategori",
-    type: "dropdown",
-    children: OTHER_PAGE_CHILD,
   },
 ];

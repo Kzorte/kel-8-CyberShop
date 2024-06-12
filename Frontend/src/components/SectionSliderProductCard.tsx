@@ -1,73 +1,88 @@
 "use client";
-
-import React, { FC, useEffect, useId, useRef, useState } from "react";
-import Heading from "@/components/Heading/Heading";
-// @ts-ignore
+import React, { useEffect, useState, useRef } from 'react';
 import Glide from "@glidejs/glide/dist/glide.esm";
-import ProductCard from "./ProductCard";
-import { Product, PRODUCTS } from "@/data/data";
+import ProductCard from './ProductCard';
+import Heading from "@/components/Heading/Heading";
+import { fetchProducts } from '@/utils/api';
+import Link from 'next/link';
+import { Product } from '@/data/data';
 
-export interface SectionSliderProductCardProps {
+interface SectionSliderProductCardProps {
   className?: string;
   itemClassName?: string;
   heading?: string;
-  headingFontClassName?: string;
-  headingClassName?: string;
   subHeading?: string;
-  data?: Product[];
+  headingClassName?: string;  // Added this to match your usage
+  headingFontClassName?: string;  // Added this to match your usage
 }
 
-const SectionSliderProductCard: FC<SectionSliderProductCardProps> = ({
+const SectionSliderProductCard: React.FC<SectionSliderProductCardProps> = ({
   className = "",
   itemClassName = "",
-  headingFontClassName,
-  headingClassName,
-  heading,
+  heading = "New Arrivals",
   subHeading = "",
-  data = PRODUCTS.filter((_, i) => i < 8 && i > 2),
+  headingClassName = "",  // Added this to match your usage
+  headingFontClassName = "",  // Added this to match your usage
 }) => {
-  const sliderRef = useRef(null);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const sliderRef = useRef<HTMLDivElement>(null);
 
-  //
   const [isShow, setIsShow] = useState(false);
 
   useEffect(() => {
-    const OPTIONS: Partial<Glide.Options> = {
-      // direction: document.querySelector("html")?.getAttribute("dir") || "ltr",
-      perView: 4,
-      gap: 32,
-      bound: true,
-      breakpoints: {
-        1280: {
-          perView: 4 - 1,
-        },
-        1024: {
-          gap: 20,
-          perView: 4 - 1,
-        },
-        768: {
-          gap: 20,
-          perView: 4 - 2,
-        },
-        640: {
-          gap: 20,
-          perView: 1.5,
-        },
-        500: {
-          gap: 20,
-          perView: 1.3,
-        },
-      },
-    };
-    if (!sliderRef.current) return;
+    async function fetchAndSetProducts() {
+      try {
+        const fetchedProducts = await fetchProducts();
+        setProducts(fetchedProducts);
+        setIsLoading(false);
+      } catch (error: any) {
+        console.error('Failed to fetch products:', error);
+        setIsLoading(false);
+        setError('Failed to load products');
+      }
+    }
 
-    let slider = new Glide(sliderRef.current, OPTIONS);
-    slider.mount();
-    setIsShow(true);
-    return () => {
-      slider.destroy();
-    };
-  }, [sliderRef]);
+    fetchAndSetProducts();
+  }, []);
+
+  useEffect(() => {
+    if (products.length > 0 && sliderRef.current) {
+      const glide = new Glide(sliderRef.current, {
+        type: 'carousel',
+        perView: 4,
+        gap: 32,
+        bound: true,
+        breakpoints: {
+          1280: { perView: 3 },
+          1024: { perView: 2 },
+          768: { perView: 2 },
+          640: { perView: 1 },
+          500: { perView: 1 },
+        },
+        peek: {
+          before: 100,
+          after: 50,
+        }
+      });
+
+      glide.mount();
+      setIsShow(true);
+
+      return () => {
+        glide.destroy();
+      };
+    }
+  }, [products]);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
 
   return (
     <div className={`nc-SectionSliderProductCard ${className}`}>
@@ -82,9 +97,11 @@ const SectionSliderProductCard: FC<SectionSliderProductCardProps> = ({
         </Heading>
         <div className="glide__track" data-glide-el="track">
           <ul className="glide__slides">
-            {data.map((item, index) => (
+            {products.map((item, index) => (
               <li key={index} className={`glide__slide ${itemClassName}`}>
-                <ProductCard data={item} />
+                <Link href={`/product-detail?productId=${item.id}`}>
+                  <ProductCard data={item} isLiked={false} />
+                </Link>
               </li>
             ))}
           </ul>

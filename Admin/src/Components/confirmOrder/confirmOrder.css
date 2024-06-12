@@ -1,0 +1,44 @@
+.confirmorder-container {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 16px;
+    padding: 16px;
+  }
+  
+  .confirmorder-item {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 16px;
+    background-color: #f9f9f9;
+  }
+  
+  .confirmorder-details {
+    margin-bottom: 16px;
+  }
+  
+  .confirmorder-items ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .confirmorder-items li {
+    margin-bottom: 8px;
+  }
+  
+  .confirm-button {
+    display: block;
+    width: 100%;
+    padding: 8px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center;
+    margin-top: 16px;
+  }
+  
+  .confirm-button:hover {
+    background-color: #0056b3;
+  }
+  

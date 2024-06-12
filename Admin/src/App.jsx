@@ -4,6 +4,8 @@ import LoginPage from './Components/Login/LoginPage';
 import Signup from './Components/Signup/Signup';
 import Admin from './Pages/Admin/Admin';
 import Navbar from './Components/Navbar/Navbar';
+import ConfirmOrder from './Components/confirmOrder/confirmOrder'; // Impor komponen ConfirmOrder
+import './App.css';
 
 const ProtectedRoute = ({ children, isLoggedIn }) => {
   return isLoggedIn ? children : <Navigate to="/login" replace />;
@@ -28,6 +30,7 @@ const App = () => {
         <Route path="/login" element={<LoginPage onLoginSuccess={handleLoginSuccess} />} />
         <Route path="/signup" element={<Signup />} /> {/* Tambahkan rute untuk halaman signup */}
         <Route path="/admin/*" element={<ProtectedRoute isLoggedIn={isLoggedIn}><Admin /></ProtectedRoute>} />
+        <Route path="/admin/confirm-order" element={<ProtectedRoute isLoggedIn={isLoggedIn}><ConfirmOrder /></ProtectedRoute>} /> {/* Rute untuk konfirmasi order */}
         <Route path="/" element={<Navigate to="/admin" />} />
         <Route path="*" element={<Navigate to="/login" />} />
       </Routes>

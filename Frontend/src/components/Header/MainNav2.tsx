@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React, { FC, useState } from "react";
 import Logo from "@/shared/Logo/Logo";
@@ -109,7 +109,7 @@ const MainNav2: FC<MainNav2Props> = ({ className = "" }) => {
                 {renderMagnifyingGlassIcon()}
               </button>
             )}
-            <AvatarDropdown />
+            <AvatarDropdown /> {/* Tampilkan AvatarDropdown */}
             <CartDropdown />
           </div>
         </div>

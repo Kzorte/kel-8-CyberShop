@@ -1,242 +1,117 @@
-.list-product{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    height: 740px;
-    padding: 10px 50px;
-    margin: 30px;
-    border-radius: 6px;
-    background: white;
-}
-
-.listproduct-format-main{
-    display: grid;
-    grid-template-columns: 1fr 3fr 1fr 1fr 1fr 1fr;
-    gap: 10px;
-    width: 100%;
-    padding: 20px 0px;
-    color: #454545;
-    font-size: 15px;
-    font-weight: 600;
-}
-
-.lisproduct-format{
-    display: grid;
-    grid-template-columns: 1fr 3fr 1fr 1fr 1fr 1fr;
-    align-items: center;
-    font-weight: 500;
-}
-
-.listproduct-product-icon{
-    height: 80px;
-}
-
-.listproduct-remove-icon{
-    cursor: pointer;
-    margin: auto;
-    justify-content: center;
-
-}
-.listproduct-allproducts{
-    overflow-y: auto;
-}
-
-.listproduct-allproducts{
-    display: grid;
-    gap: 10px;
-    width: 100%;
-    padding: 20px px;
-    color: #a19e9e;
-    font-size: 15px;
-    font-weight: 500;
-}
-@media (max-width:800px) {
-    .list-product{
-        box-sizing: border-box;
-        width: 95%;
-        height: 100%;
-        padding: 10px 30px;
-        margin: 20px auto;
-    }
-    .listproduct-format-main{
-        padding: 15px 0px;
-        color: #454545;
-        font-size: 12px;
-    }
-    .listproduct-product-icon{
-        height: 60px;
-    }
-}
-.listproduct-edit-button{
-    cursor: pointer;
-    border-radius: 25px;
-    height: 30px;
-    text-align: center;
-    margin: 10px 10px;
-
-}
-.listproduct-remove-button{
-    cursor: pointer;
-    border-radius: 25px;
-    height: 30px;
-    text-align: center;
-    margin: 10px 10px;
-}
-
-/* Form Edit */
-.edit-form-itemfield input{
-    box-sizing: border-box;
-    width: 100%;
-    height: 50px;
-    border-radius: 4px;
-    padding-left: 15px;
-    border: 1px solid #c3c3c3;
-    outline: none;
-    color: #7b7b7b;
-    font-family: 'Poppins';
-    font-size: 14px;
-}
-.edit-form-selector{
-        box-sizing: border-box;
-    width: 100%;
-    height: 50px;
-    border-radius: 4px;
-    padding-left: 15px;
-    border: 1px solid #c3c3c3;
-    outline: none;
-    color: #7b7b7b;
-    font-family: 'Poppins';
-    font-size: 14px;
-}
-
-.edit-form-image-preview {
-
-      height: 70px;
-    width: 70px;
-    border-radius: 10px;
-    object-fit: contain;
-    margin: 10px 0px;
-}
-
-.edit-form-image-preview img {
-  max-width: 100%;
-  height: auto;
-}
-
-.edit-form-container {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.edit-form-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-}
-
-.edit-form {
-  position: relative;
-  background-color: white;
+.list-product {
   padding: 20px;
+  background-color: #fff;
   border-radius: 8px;
-  max-height: 80%;
-  overflow-y: auto; /* Enable vertical scrollbar */
-    /* Style for custom scrollbar */
-  scrollbar-width: thin; /* For Firefox */
-  scrollbar-color: #888 #f1f1f1; /* Track and handle colors */
-
-}
-/* Scroll bar */
-
-
-/* Style for WebKit browsers (Chrome, Safari) */
-.edit-form::-webkit-scrollbar {
-  width: 10px; /* Lebar bilah gulir */
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
 
-/* Track */
-.edit-form::-webkit-scrollbar-track {
-  background: #f1f1f1; /* Warna latar belakang track */
-}
-
-/* Handle */
-.edit-form::-webkit-scrollbar-thumb {
-  background: #888; /* Warna handle */
-  border-radius: 5px; /* Border radius handle */
-}
-
-/* Handle saat di hover */
-.edit-form::-webkit-scrollbar-thumb:hover {
-  background: #555; /* Warna handle saat di hover */
-}
-.edit-form h2 {
-  margin-bottom: 20px;
-}
-
-.edit-form input {
-  width: 100%;
-  padding: 10px;
+.listproduct-format-main {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 10px;
   margin-bottom: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+  font-weight: bold;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #eee;
 }
 
-.edit-form-buttons {
+.listproduct-allproducts {
   display: flex;
-  justify-content: space-between;
-  margin-top: 20px;
+  flex-direction: column;
 }
 
-.edit-form-buttons button {
+.listproduct-format {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.listproduct-product-icon {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  margin-right: 10px;
+}
+
+.addproduct-itemfield {
+  display: flex;
+  flex-direction: column;
+}
+
+.addproduct-itemfield input[type="text"],
+.addproduct-itemfield input[type="number"],
+.addproduct-itemfield select,
+.addproduct-itemfield textarea {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.addproduct-itemfield label {
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.addproduct-price {
+  display: flex;
+  gap: 20px;
+}
+
+.addproduct-btn {
   padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  margin-top: 10px;
 }
 
-.listproduct-edit-button {
-  background-color: #457ba0;
-  color: white;
+.addproduct-thumnail-img {
+  width: 100px;
+  height: auto;
+  margin-bottom: 10px;
 }
 
-.listproduct-edit-button:hover {
-  background-color: #45718e;
+.edit-product-form {
+  grid-column: span 8;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  align-items: center;
 }
 
-.listproduct-remove-button{
-  background-color: #f44336;
-  color: white;
-}
-.listproduct-remove-button:hover{
-      background-color: #da190b;
-
-}
-.edit-form-buttons button[type="submit"] {
-  background-color: #457ba0;
-  color: white;
+.edit-product-form input,
+.edit-product-form select,
+.edit-product-form textarea {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
-.edit-form-buttons button[type="submit"]:hover {
-  background-color: #45718e;
+.edit-product-form .addproduct-itemfield {
+  margin-bottom: 0;
 }
 
-.edit-form-buttons button[type="button"] {
-  background-color: #f44336;
-  color: white;
+.edit-product-form .addproduct-btn {
+  grid-column: span 2;
+  justify-self: center;
 }
 
-.edit-form-buttons button[type="button"]:hover {
-  background-color: #da190b;
+.edit-product-form .addproduct-remove-button {
+  background-color: #dc3545;
 }
 
+@media (max-width: 768px) {
+  .edit-product-form {
+    grid-template-columns: 1fr;
+  }
 
+  .edit-product-form .addproduct-btn,
+  .edit-product-form .addproduct-remove-button {
+    grid-column: span 1;
+  }
+}

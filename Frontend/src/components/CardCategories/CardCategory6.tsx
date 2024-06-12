@@ -11,6 +11,7 @@ export interface CardCategory6Props {
   bgSVG?: string;
   name: string;
   desc: string;
+  href: CustomRoute;
   color?: string;
 }
 
@@ -20,6 +21,7 @@ const CardCategory6: FC<CardCategory6Props> = ({
   bgSVG = explore1Svg,
   name,
   desc,
+  href,
   color = "bg-rose-50",
 }) => {
   return (
@@ -50,7 +52,7 @@ const CardCategory6: FC<CardCategory6Props> = ({
           </div>
 
           <Link
-            href={"/not-found"}
+            href={href}
             className="h-5 flex items-center text-sm font-medium group-hover:text-primary-500 transition-colors"
           >
             <span>See Collection</span>
@@ -58,10 +60,12 @@ const CardCategory6: FC<CardCategory6Props> = ({
           </Link>
         </div>
       </div>
-
-      <Link href={"/not-found"}></Link>
     </div>
   );
 };
 
 export default CardCategory6;
+export interface CustomRoute {
+  pathname: string;
+  // Anda dapat menambahkan properti lain seperti query, hash, dll. jika diperlukan
+}

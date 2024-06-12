@@ -17,19 +17,28 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import NcImage from "@/shared/NcImage/NcImage";
-import LoginForm from "@/app/login/page";
+import { useAuth } from "@/context/AuthContext";
+import './ProductCard.css'; 
 
 export interface ProductCardProps {
   className?: string;
-  data?: Product;
-  isLiked?: boolean;
+  data: Product;
+  isLiked: boolean;
 }
 
 const ProductCard: FC<ProductCardProps> = ({
   className = "",
-  data = PRODUCTS[0],
+  data,
   isLiked,
 }) => {
+  const [isExpanded, setIsExpanded] = useState(false); // State untuk mengontrol tampilan deskripsi
+
+  const toggleDescription = () => {
+    setIsExpanded(!isExpanded);
+  };
+
+  if (!data) data = PRODUCTS[0]; // More safe handling of default data
+
   const {
     name,
     price,
@@ -42,18 +51,20 @@ const ProductCard: FC<ProductCardProps> = ({
     rating,
     id,
     numberOfReviews,
+    
   } = data;
+
 
   const [variantActive, setVariantActive] = useState(0);
   const [showModalQuickView, setShowModalQuickView] = useState(false);
   const router = useRouter();
+  const { addToCart } = useAuth();
 
   const notifyAddTocart = ({ size }: { size?: string }) => {
-    // Periksa apakah pengguna sudah login
-    const isLoggedIn = false; // Fungsi ini harus Anda implementasikan sesuai dengan cara Anda menyimpan status login pengguna
+    const isLoggedIn = true; // Implementasikan sesuai dengan cara Anda menyimpan status login pengguna
   
     if (isLoggedIn) {
-      // Pengguna sudah login, jalankan perintah seperti biasa
+      addToCart(data); // Add product to cart
       toast.custom(
         (t) => (
           <Transition
@@ -80,14 +91,12 @@ const ProductCard: FC<ProductCardProps> = ({
           duration: 3000,
         }
       );
-    } else {
-      
     }
   };
 
   const renderProductCartOnNotify = ({ size }: { size?: string }) => {
     return (
-      <div className="flex ">
+      <div className="flex">
         <div className="h-24 w-20 flex-shrink-0 overflow-hidden rounded-xl bg-slate-100">
           <Image
             width={80}
@@ -100,11 +109,10 @@ const ProductCard: FC<ProductCardProps> = ({
 
         <div className="ms-4 flex flex-1 flex-col">
           <div>
-            <div className="flex justify-between ">
+            <div className="flex justify-between">
               <div>
-                <h3 className="text-base font-medium ">{name}</h3>
-                <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-                </p>
+                <h3 className="text-base font-medium">{name}</h3>
+                <p className="mt-1 text-sm text-slate-500 dark:text-slate-400"></p>
               </div>
               <Prices price={price} className="mt-0.5" />
             </div>
@@ -115,7 +123,7 @@ const ProductCard: FC<ProductCardProps> = ({
             <div className="flex">
               <button
                 type="button"
-                className="font-medium text-primary-6000 dark:text-primary-500 "
+                className="font-medium text-primary-6000 dark:text-primary-500"
                 onClick={(e) => {
                   e.preventDefault();
                   router.push("/cart");
@@ -162,7 +170,7 @@ const ProductCard: FC<ProductCardProps> = ({
           className="shadow-lg"
           fontSize="text-xs"
           sizeClass="py-2 px-4"
-          onClick={() => notifyAddTocart({  })}
+          onClick={() => notifyAddTocart({})}
         >
           <BagIcon className="w-3.5 h-3.5 mb-0.5" />
           <span className="ms-1">Add to bag</span>
@@ -187,12 +195,12 @@ const ProductCard: FC<ProductCardProps> = ({
 
     return (
       <div className="absolute bottom-0 inset-x-1 space-x-1.5 rtl:space-x-reverse flex justify-center opacity-0 invisible group-hover:bottom-4 group-hover:opacity-100 group-hover:visible transition-all">
-        {sizes.map((size, index) => {
+        {sizes.map((size: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | React.PromiseLikeOfReactNode | null | undefined, index: React.Key | null | undefined) => {
           return (
             <div
               key={index}
               className="nc-shadow-lg w-10 h-10 rounded-xl bg-white hover:bg-slate-900 hover:text-white transition-colors cursor-pointer flex items-center justify-center uppercase font-semibold tracking-tight text-sm text-slate-900"
-              onClick={() => notifyAddTocart({  })}
+              onClick={() => notifyAddTocart({})}
             >
               {size}
             </div>
@@ -202,53 +210,52 @@ const ProductCard: FC<ProductCardProps> = ({
     );
   };
 
+
   return (
     <>
-      <div
-        className={`nc-ProductCard relative flex flex-col bg-transparent ${className}`}
-      >
-        <Link href={"/product-detail"} className="absolute inset-0"></Link>
+      <div className={`nc-ProductCard relative flex flex-col bg-transparent ${className}`}>
+        <Link href={`/product-detail?productId=${id}`} passHref>
+          <div className="absolute inset-0 cursor-pointer" role="button" aria-label="Open product detail" />
+        </Link>
 
-        <div className="relative flex-shrink-0 bg-slate-50 dark:bg-slate-300 rounded-3xl overflow-hidden z-1 group">
-          <Link href={"/product-detail"} className="block">
-            <NcImage
-              containerClassName="flex aspect-w-11 aspect-h-12 w-full h-0"
-              src={image}
-              className="object-cover w-full h-full drop-shadow-xl"
-              fill
-              sizes="(max-width: 640px) 100vw, (max-width: 1200px) 50vw, 40vw"
-              alt="product"
-            />
-          </Link>
+        <div className="relative flex-shrink-0 bg-slate-50 dark:bg-slate-300 rounded-3xl overflow-hidden z-10">
+          <NcImage
+            containerClassName="flex aspect-w-11 aspect-h-12 w-full h-0"
+            src={image}
+            className="object-cover w-full h-full drop-shadow-xl"
+            fill
+            sizes="(max-width: 640px) 100vw, (max-width: 1200px) 50vw, 40vw"
+            alt={name}
+          />
           <ProductStatus status={status} />
-          <LikeButton liked={isLiked} className="absolute top-3 end-3 z-10" />
-          {sizes ? renderSizeList() : renderGroupButtons()}
+          <LikeButton liked={isLiked} className="absolute top-3 right-3 z-20" />
         </div>
 
-        <div className="space-y-4 px-2.5 pt-5 pb-2.5">
-          {/* {renderVariants()} */}
+        <div className="space-y-4 p-2.5">
           <div>
-            <h2 className="nc-ProductCard__title text-base font-semibold transition-colors">
+            <h2 className="text-base font-semibold transition-colors">
               {name}
             </h2>
-            <p className={`text-sm text-slate-500 dark:text-slate-400 mt-1 `}>
+            <p className={`text-sm text-slate-500 dark:text-slate-400 mt-1 ${isExpanded ? "" : "line-clamp-3"}`}>
               {description}
             </p>
+            <button onClick={toggleDescription} className="text-blue-500 text-sm mt-2">
+              {isExpanded ? 'Show Less' : 'Read More'}
+            </button>
           </div>
 
-          <div className="flex justify-between items-end ">
+          <div className="flex justify-between items-end">
             <Prices price={price} />
-            <div className="flex items-center mb-0.5">
-              <StarIcon className="w-5 h-5 pb-[1px] text-amber-400" />
-              <span className="text-sm ms-1 text-slate-500 dark:text-slate-400">
-                {rating || ""} ({numberOfReviews || 0} reviews)
+            <div className="flex items-center">
+              <StarIcon className="w-5 h-5 text-amber-400" />
+              <span className="text-sm ml-1 text-slate-500 dark:text-slate-400">
+                {rating || ""} ({numberOfReviews || 10} reviews)
               </span>
             </div>
           </div>
         </div>
       </div>
 
-      {/* QUICKVIEW */}
       <ModalQuickView
         show={showModalQuickView}
         onCloseModalQuickView={() => setShowModalQuickView(false)}

@@ -13,7 +13,7 @@ const Page404 = () => (
           {`Halaman Yang Anda Akses Masih Dalam Status Pembuatan.`}{" "}
         </span>
         <div className="pt-8">
-          <ButtonPrimary href="/">Return Home Page</ButtonPrimary>
+          <ButtonPrimary href="/page">Return Home Page</ButtonPrimary>
         </div>
       </header>
     </div>

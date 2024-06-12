@@ -49,7 +49,7 @@ const MainNav2Logged: FC<MainNav2LoggedProps> = () => {
         className="flex-1 py-2 text-slate-900 dark:text-slate-100"
         onSubmit={(e) => {
           e.preventDefault();
-          router.push("/not-found");
+          router.push("/login");
           inputRef.current?.blur();
         }}
       >
@@ -87,6 +87,14 @@ const MainNav2Logged: FC<MainNav2LoggedProps> = () => {
         </div>
 
         <div className="flex-1 flex items-center justify-end text-slate-700 dark:text-slate-100">
+          {!showSearchForm && (
+            <button
+              className="hidden lg:flex w-10 h-10 sm:w-12 sm:h-12 rounded-full text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 focus:outline-none items-center justify-center"
+              onClick={() => setShowSearchForm(!showSearchForm)}
+            >
+              {renderMagnifyingGlassIcon()}
+            </button>
+          )}
           <AvatarDropdown />
           <CartDropdown />
         </div>
