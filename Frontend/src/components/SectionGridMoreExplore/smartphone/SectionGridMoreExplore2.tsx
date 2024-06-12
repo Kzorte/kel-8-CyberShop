@@ -22,7 +22,7 @@ const SectionGridMoreExplore: FC<SectionGridMoreExploreProps> = ({
   useEffect(() => {
     const fetchCategories = async (p0?: any[]) => {
       try {
-        const res = await axios.get('http://127.0.0.1:3000/categories');
+        const res = await axios.get('http://localhost:3000/categories');
         fetchCategories([{ name: 'SmartPhone' }, ...res.data]);
       } catch (error) {
         console.error('Failed to fetch categories:', error);
@@ -32,7 +32,7 @@ const SectionGridMoreExplore: FC<SectionGridMoreExploreProps> = ({
 
     const fetchProducts = async () => {
       try {
-        const res = await axios.get('http://127.0.0.1:3000/allproducts');
+        const res = await axios.get('http://localhost:3000/allproducts');
         setProducts(res.data);
       } catch (error) {
         console.error('Failed to fetch products:', error);
