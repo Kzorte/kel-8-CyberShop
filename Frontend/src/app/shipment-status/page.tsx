@@ -7,10 +7,10 @@ import Image, { StaticImageData } from 'next/image';
 import { fetchOrderStatus } from '@/utils/api';
 import { useAuth } from '@/context/AuthContext';
 import ButtonPrimary from '@/shared/Button/ButtonPrimary';
-import jamImage from '@/assets/jam.png';
-import dikirimImage from '@/assets/dikirim.png';
-import sampaiImage from '@/assets/sampai.png';
-import verifikasiImage from '@/assets/verifikasi.png';
+import jamimage from '@/assets/jam.png';
+import dikirimimage from '@/assets/dikirim.png';
+import sampaiimage from '@/assets/sampai.png';
+import verifikasiimage from '@/assets/verifikasi.png';
 
 const orderId = '123456'; // Replace with real order ID as needed
 
@@ -82,10 +82,10 @@ const ShipmentStatusPage: React.FC = () => {
         </div>
       </div>
       <div className="mt-6 flex justify-center space-x-4">
-        {renderStatusIndicator(orderStatus, 'Menunggu Konfirmasi', jamImage, 'Menunggu Konfirmasi')}
-        {renderStatusIndicator(orderStatus, 'Confirmed', verifikasiImage, 'Pesanan Anda telah dikonfirmasi')}
-        {renderStatusIndicator(orderStatus, 'Shipped', dikirimImage, 'Pesanan Sedang Dikirim')}
-        {renderStatusIndicator(orderStatus, 'Delivered', sampaiImage, 'Pesanan Sampai')}
+        {renderStatusIndicator(orderStatus, 'Menunggu Konfirmasi', jamimage, 'Menunggu Konfirmasi')}
+        {renderStatusIndicator(orderStatus, 'Confirmed', verifikasiimage, 'Pesanan Anda telah dikonfirmasi')}
+        {renderStatusIndicator(orderStatus, 'Shipped', dikirimimage, 'Pesanan Sedang Dikirim')}
+        {renderStatusIndicator(orderStatus, 'Delivered', sampaiimage, 'Pesanan Sampai')}
       </div>
       <div className="mt-6 flex justify-center">
         <Link href="/" passHref>
