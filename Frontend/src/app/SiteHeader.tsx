@@ -1,6 +1,3 @@
-// components/SiteHeader.tsx
-"use client";
-
 import React from "react";
 import { useRouter } from "next/navigation";
 import HeaderLogged from "@/components/Header/HeaderLogged";
@@ -9,7 +6,7 @@ import { useThemeMode } from "@/hooks/useThemeMode";
 
 const SiteHeader = () => {
   useThemeMode();
-  const { pathname } = useRouter();
+  const { pathname }: any = useRouter(); // Type assertion
 
   return pathname === "/home-2" ? <Header /> : <HeaderLogged />;
 };
