@@ -2,11 +2,15 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import Image from 'next/image';
+import { useRouter } from 'next/navigation'; // Gunakan dari next/navigation untuk App Router
+import Image, { StaticImageData } from 'next/image';
 import { fetchOrderStatus } from '@/utils/api';
 import { useAuth } from '@/context/AuthContext';
 import ButtonPrimary from '@/shared/Button/ButtonPrimary';
+import jamImage from '@/assets/jam.png';
+import dikirimImage from '@/assets/dikirim.png';
+import sampaiImage from '@/assets/sampai.png';
+import verifikasiImage from '@/assets/verifikasi.png';
 
 const orderId = '123456'; // Replace with real order ID as needed
 
@@ -38,7 +42,7 @@ const ShipmentStatusPage: React.FC = () => {
     return <div>Loading...</div>;
   }
 
-  const renderStatusIndicator = (currentStatus: string, expectedStatus: string, imageSrc: string, altText: string) => {
+  const renderStatusIndicator = (currentStatus: string, expectedStatus: string, imageSrc: StaticImageData, altText: string) => {
     const isActive = currentStatus === expectedStatus;
     const textColorClass = isActive ? 'text-green-600' : 'text-gray-400';
     const fontWeightClass = isActive ? 'font-semibold' : 'font-normal';
@@ -78,10 +82,10 @@ const ShipmentStatusPage: React.FC = () => {
         </div>
       </div>
       <div className="mt-6 flex justify-center space-x-4">
-        {renderStatusIndicator(orderStatus, 'Menunggu Konfirmasi', '/images/jam.png', 'Menunggu Konfirmasi')}
-        {renderStatusIndicator(orderStatus, 'Confirmed', '/images/verifikasi.png', 'Pesanan Anda telah dikonfirmasi')}
-        {renderStatusIndicator(orderStatus, 'Shipped', '/images/dikirim.png', 'Pesanan Sedang Dikirim')}
-        {renderStatusIndicator(orderStatus, 'Delivered', '/images/sampai.png', 'Pesanan Sampai')}
+        {renderStatusIndicator(orderStatus, 'Menunggu Konfirmasi', jamImage, 'Menunggu Konfirmasi')}
+        {renderStatusIndicator(orderStatus, 'Confirmed', verifikasiImage, 'Pesanan Anda telah dikonfirmasi')}
+        {renderStatusIndicator(orderStatus, 'Shipped', dikirimImage, 'Pesanan Sedang Dikirim')}
+        {renderStatusIndicator(orderStatus, 'Delivered', sampaiImage, 'Pesanan Sampai')}
       </div>
       <div className="mt-6 flex justify-center">
         <Link href="/" passHref>
