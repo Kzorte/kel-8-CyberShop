@@ -19,10 +19,6 @@ const pages: {
     link: "/account",
   },
   {
-    name: "Save lists",
-    link: "/account-savelists",
-  },
-  {
     name: " My order",
     link: "/account-order",
   },
